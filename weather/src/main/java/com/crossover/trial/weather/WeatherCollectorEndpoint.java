@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.crossover.trial.weather.domain.AirportData;
+import com.crossover.trial.weather.domain.DataPointType;
 
 /**
  * The interface shared to airport weather collection systems.
