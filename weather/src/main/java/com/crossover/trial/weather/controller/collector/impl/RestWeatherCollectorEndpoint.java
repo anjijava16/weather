@@ -8,8 +8,13 @@ import com.crossover.trial.weather.domain.DataPointType;
 import com.crossover.trial.weather.exception.WeatherException;
 import com.google.gson.Gson;
 
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.HashSet;
@@ -50,8 +55,12 @@ public class RestWeatherCollectorEndpoint implements WeatherCollectorEndpoint {
     }
 
 
+    @GET
+    @Path("/airports")
+    @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getAirports() {
+    	System.out.println("getAirports...");
         Set<String> retval = new HashSet<>();
         for (AirportData ad : airportData) {
             retval.add(ad.getIata());
@@ -59,23 +68,31 @@ public class RestWeatherCollectorEndpoint implements WeatherCollectorEndpoint {
         return Response.status(Response.Status.OK).entity(retval).build();
     }
 
-
+    @GET
+    @Path("/airport/{iata}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getAirport(@PathParam("iata") String iata) {
+    	System.out.println("getAirport....");
         AirportData ad = findAirportData(iata);
         return Response.status(Response.Status.OK).entity(ad).build();
     }
 
 
+    @GET
+    @Path("/airport/{iata}/{lat}/{long}")
     @Override
     public Response addAirport(@PathParam("iata") String iata,
                                @PathParam("lat") String latString,
                                @PathParam("long") String longString) {
+    	System.out.println("addAirport...");
         addAirport(iata, Double.valueOf(latString), Double.valueOf(longString));
         return Response.status(Response.Status.OK).build();
     }
 
 
+    @DELETE
+    @Path("/airport/{iata}")
     @Override
     public Response deleteAirport(@PathParam("iata") String iata) {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
