@@ -79,8 +79,9 @@ public class RestWeatherCollectorEndpoint implements WeatherCollectorEndpoint {
     }
 
 
-    @GET
+    @POST
     @Path("/airport/{iata}/{lat}/{long}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response addAirport(@PathParam("iata") String iata,
                                @PathParam("lat") String latString,
