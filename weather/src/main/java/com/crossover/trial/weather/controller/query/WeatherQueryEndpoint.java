@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.controller.query;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

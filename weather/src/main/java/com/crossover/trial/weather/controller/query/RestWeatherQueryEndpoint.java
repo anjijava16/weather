@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.controller.query;
 
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
@@ -184,7 +184,7 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
     /**
      * A dummy init method that loads hard coded data
      */
-    protected static void init() {
+    public static void init() {
         airportData.clear();
         atmosphericInformation.clear();
         requestFrequency.clear();

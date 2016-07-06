@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.RestWeatherQueryEndpoint.*;
+import static com.crossover.trial.weather.controller.query.RestWeatherQueryEndpoint.*;
 
 /**
  * A REST implementation of the WeatherCollector API. Accessible only to airport weather collection
