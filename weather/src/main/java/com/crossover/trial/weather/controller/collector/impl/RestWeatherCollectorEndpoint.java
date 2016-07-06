@@ -1,5 +1,6 @@
-package com.crossover.trial.weather.controller.collector;
+package com.crossover.trial.weather.controller.collector.impl;
 
+import com.crossover.trial.weather.controller.collector.WeatherCollectorEndpoint;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.controller.query.RestWeatherQueryEndpoint.*;
+import static com.crossover.trial.weather.controller.query.impl.RestWeatherQueryEndpoint.*;
 
 /**
  * A REST implementation of the WeatherCollector API. Accessible only to airport weather collection

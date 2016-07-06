@@ -1,5 +1,6 @@
-package com.crossover.trial.weather.controller.query;
+package com.crossover.trial.weather.controller.query.impl;
 
+import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.google.gson.Gson;
@@ -10,7 +11,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.controller.collector.RestWeatherCollectorEndpoint.addAirport;
+import static com.crossover.trial.weather.controller.collector.impl.RestWeatherCollectorEndpoint.addAirport;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
