@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.test.server;
 
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.http.server.*;
