@@ -1,10 +1,12 @@
 package com.crossover.trial.weather;
 
+import com.crossover.trial.weather.domain.AirportData;
 import com.google.gson.Gson;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
