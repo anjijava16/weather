@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.controller.query.impl.RestWeatherQueryEndpoint.*;
+import static com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl.*;
 
 /**
  * A REST implementation of the WeatherCollector API. Accessible only to airport weather collection
@@ -31,8 +31,8 @@ import static com.crossover.trial.weather.controller.query.impl.RestWeatherQuery
  */
 
 @Path("/collect")
-public class RestWeatherCollectorEndpoint implements WeatherCollectorEndpoint {
-    public final static Logger LOGGER = Logger.getLogger(RestWeatherCollectorEndpoint.class.getName());
+public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
+    public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class.getName());
 
     /** shared gson json to object factory */
     public final static Gson gson = new Gson();

@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.controller.collector.impl.RestWeatherCollectorEndpoint.addAirport;
+import static com.crossover.trial.weather.controller.collector.impl.WeatherCollectorEndpointImpl.addAirport;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
@@ -20,7 +20,7 @@ import static com.crossover.trial.weather.controller.collector.impl.RestWeatherC
  * @author code test administrator
  */
 @Path("/query")
-public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
+public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
 

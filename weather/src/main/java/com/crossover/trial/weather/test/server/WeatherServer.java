@@ -7,8 +7,8 @@ import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import com.crossover.trial.weather.controller.collector.impl.RestWeatherCollectorEndpoint;
-import com.crossover.trial.weather.controller.query.impl.RestWeatherQueryEndpoint;
+import com.crossover.trial.weather.controller.collector.impl.WeatherCollectorEndpointImpl;
+import com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,8 +33,8 @@ public class WeatherServer {
             System.out.println("Starting Weather App local testing server: " + BASE_URL);
 
             final ResourceConfig resourceConfig = new ResourceConfig();
-            resourceConfig.register(RestWeatherCollectorEndpoint.class);
-            resourceConfig.register(RestWeatherQueryEndpoint.class);
+            resourceConfig.register(WeatherCollectorEndpointImpl.class);
+            resourceConfig.register(WeatherQueryEndpointImpl.class);
 
             HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URL), resourceConfig, false);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

@@ -1,9 +1,9 @@
 package com.crossover.trial.weather;
 
 import com.crossover.trial.weather.controller.collector.WeatherCollectorEndpoint;
-import com.crossover.trial.weather.controller.collector.impl.RestWeatherCollectorEndpoint;
+import com.crossover.trial.weather.controller.collector.impl.WeatherCollectorEndpointImpl;
 import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
-import com.crossover.trial.weather.controller.query.impl.RestWeatherQueryEndpoint;
+import com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
 import com.google.gson.Gson;
@@ -19,16 +19,16 @@ import static org.junit.Assert.assertEquals;
 
 public class WeatherEndpointTest {
 
-    private WeatherQueryEndpoint _query = new RestWeatherQueryEndpoint();
+    private WeatherQueryEndpoint _query = new WeatherQueryEndpointImpl();
 
-    private WeatherCollectorEndpoint _update = new RestWeatherCollectorEndpoint();
+    private WeatherCollectorEndpoint _update = new WeatherCollectorEndpointImpl();
 
     private Gson _gson = new Gson();
 
     private DataPoint _dp;
     @Before
     public void setUp() throws Exception {
-        RestWeatherQueryEndpoint.init();
+        WeatherQueryEndpointImpl.init();
         _dp = new DataPoint.Builder()
                 .withCount(10).withFirst(10).withMedian(20).withLast(30).withMean(22).build();
         _update.updateWeather("BOS", "wind", _gson.toJson(_dp));
