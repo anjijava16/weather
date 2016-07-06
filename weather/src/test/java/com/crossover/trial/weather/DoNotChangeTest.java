@@ -6,8 +6,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.crossover.trial.weather.controller.collector.WeatherCollectorEndpoint;
+
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Path;

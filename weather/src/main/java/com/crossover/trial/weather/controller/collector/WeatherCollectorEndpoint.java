@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.controller.collector;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

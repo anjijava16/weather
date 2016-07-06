@@ -7,6 +7,8 @@ import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import com.crossover.trial.weather.controller.collector.RestWeatherCollectorEndpoint;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;

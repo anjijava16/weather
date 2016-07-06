@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.RestWeatherCollectorEndpoint.addAirport;
+import static com.crossover.trial.weather.controller.collector.RestWeatherCollectorEndpoint.addAirport;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
@@ -30,10 +30,10 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
     public static final Gson gson = new Gson();
 
     /** all known airports */
-    protected static List<AirportData> airportData = new ArrayList<>();
+    public static List<AirportData> airportData = new ArrayList<>();
 
     /** atmospheric information for each airport, idx corresponds with airportData */
-    protected static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>();
+    public static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>();
 
     /**
      * Internal performance counter to better understand most requested information, this map can be improved but
