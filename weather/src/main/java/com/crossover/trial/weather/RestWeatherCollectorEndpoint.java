@@ -1,6 +1,7 @@
 package com.crossover.trial.weather;
 
 import com.crossover.trial.weather.domain.AirportData;
+import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
 import com.crossover.trial.weather.domain.DataPointType;
 import com.google.gson.Gson;
