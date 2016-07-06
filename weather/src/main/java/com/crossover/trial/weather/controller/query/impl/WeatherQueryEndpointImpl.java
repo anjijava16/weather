@@ -7,7 +7,11 @@ import com.crossover.trial.weather.service.collector.impl.WeatherCollectorEndpoi
 import com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl;
 import com.google.gson.Gson;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.*;
@@ -85,8 +89,12 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
      *
      * @return a list of atmospheric information
      */
+    @GET
+    @Path("/weather/{iata}/{radius}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response weather(String iata, String radiusString) {
+    
+    public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
         
         WeatherQueryEndpointServiceImpl service = new WeatherQueryEndpointServiceImpl();
