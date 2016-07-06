@@ -4,6 +4,7 @@ import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.service.collector.impl.WeatherCollectorEndpointServiceImpl;
+import com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl;
 import com.google.gson.Gson;
 
 import javax.ws.rs.Path;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl.*;
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
  * held in memory. The end point deploys to a single container
@@ -22,28 +24,6 @@ import java.util.logging.Logger;
 public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
-
-    /** earth radius in KM */
-    public static final double R = 6372.8;
-
-    /** shared gson json to object factory */
-    public static final Gson gson = new Gson();
-
-    /** all known airports */
-    public static List<AirportData> airportData = new ArrayList<>();
-
-    /** atmospheric information for each airport, idx corresponds with airportData */
-    public static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>();
-
-    /**
-     * Internal performance counter to better understand most requested information, this map can be improved but
-     * for now provides the basis for future performance optimizations. Due to the stateless deployment architecture
-     * we don't want to write this to disk, but will pull it off using a REST request and aggregate with other
-     * performance metrics {@link #ping()}
-     */
-    public static Map<AirportData, Integer> requestFrequency = new HashMap<AirportData, Integer>();
-
-    public static Map<Double, Integer> radiusFreq = new HashMap<Double, Integer>();
 
     static {
         init();
@@ -108,16 +88,18 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     @Override
     public Response weather(String iata, String radiusString) {
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
-        updateRequestFrequency(iata, radius);
+        
+        WeatherQueryEndpointServiceImpl service = new WeatherQueryEndpointServiceImpl();
+        service.updateRequestFrequency(iata, radius);
 
         List<AtmosphericInformation> retval = new ArrayList<>();
         if (radius == 0) {
-            int idx = getAirportDataIdx(iata);
+            int idx = service.getAirportDataIdx(iata);
             retval.add(atmosphericInformation.get(idx));
         } else {
-            AirportData ad = findAirportData(iata);
+            AirportData ad = service.findAirportData(iata);
             for (int i=0;i< airportData.size(); i++){
-                if (calculateDistance(ad, airportData.get(i)) <= radius){
+                if (service.calculateDistance(ad, airportData.get(i)) <= radius){
                     AtmosphericInformation ai = atmosphericInformation.get(i);
                     if (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
                        || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null){
@@ -129,73 +111,5 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
         return Response.status(Response.Status.OK).entity(retval).build();
     }
 
-
-    /**
-     * Records information about how often requests are made
-     *
-     * @param iata an iata code
-     * @param radius query radius
-     */
-    public void updateRequestFrequency(String iata, Double radius) {
-        AirportData airportData = findAirportData(iata);
-        requestFrequency.put(airportData, requestFrequency.getOrDefault(airportData, 0) + 1);
-        radiusFreq.put(radius, radiusFreq.getOrDefault(radius, 0));
-    }
-
-    /**
-     * Given an iataCode find the airport data
-     *
-     * @param iataCode as a string
-     * @return airport data or null if not found
-     */
-    public static AirportData findAirportData(String iataCode) {
-        return airportData.stream()
-            .filter(ap -> ap.getIata().equals(iataCode))
-            .findFirst().orElse(null);
-    }
-
-    /**
-     * Given an iataCode find the airport data
-     *
-     * @param iataCode as a string
-     * @return airport data or null if not found
-     */
-    public static int getAirportDataIdx(String iataCode) {
-        AirportData ad = findAirportData(iataCode);
-        return airportData.indexOf(ad);
-    }
-
-    /**
-     * Haversine distance between two airports.
-     *
-     * @param ad1 airport 1
-     * @param ad2 airport 2
-     * @return the distance in KM
-     */
-    public double calculateDistance(AirportData ad1, AirportData ad2) {
-        double deltaLat = Math.toRadians(ad2.getLatitude() - ad1.getLatitude());
-        double deltaLon = Math.toRadians(ad2.getLongitude() - ad1.getLongitude());
-        double a =  Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltaLon / 2), 2)
-                * Math.cos(ad1.getLatitude()) * Math.cos(ad2.getLatitude());
-        double c = 2 * Math.asin(Math.sqrt(a));
-        return R * c;
-    }
-
-    /**
-     * A dummy init method that loads hard coded data
-     */
-    public static void init() {
-        airportData.clear();
-        atmosphericInformation.clear();
-        requestFrequency.clear();
-
-        WeatherCollectorEndpointServiceImpl service = new WeatherCollectorEndpointServiceImpl();  
-        
-        service.addAirport("BOS", 42.364347, -71.005181);
-        service.addAirport("EWR", 40.6925, -74.168667);
-        service.addAirport("JFK", 40.639751, -73.778925);
-        service.addAirport("LGA", 40.777245, -73.872608);
-        service.addAirport("MMU", 40.79935, -74.4148747);
-    }
 
 }

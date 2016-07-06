@@ -6,6 +6,7 @@ import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
 import com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
+import com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -28,7 +29,7 @@ public class WeatherEndpointTest {
     private DataPoint _dp;
     @Before
     public void setUp() throws Exception {
-        WeatherQueryEndpointImpl.init();
+    	WeatherQueryEndpointServiceImpl.init();
         _dp = new DataPoint.Builder()
                 .withCount(10).withFirst(10).withMedian(20).withLast(30).withMean(22).build();
         _update.updateWeather("BOS", "wind", _gson.toJson(_dp));

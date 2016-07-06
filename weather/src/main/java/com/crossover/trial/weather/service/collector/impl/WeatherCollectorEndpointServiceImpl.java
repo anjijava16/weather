@@ -1,15 +1,12 @@
 package com.crossover.trial.weather.service.collector.impl;
 
-import static com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl.airportData;
-import static com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl.atmosphericInformation;
-import static com.crossover.trial.weather.controller.query.impl.WeatherQueryEndpointImpl.getAirportDataIdx;
-
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
 import com.crossover.trial.weather.domain.DataPointType;
 import com.crossover.trial.weather.exception.WeatherException;
 import com.crossover.trial.weather.service.collector.WeatherCollectorEndpointService;
+import com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl;
 
 public class WeatherCollectorEndpointServiceImpl implements WeatherCollectorEndpointService{
 
@@ -24,8 +21,9 @@ public class WeatherCollectorEndpointServiceImpl implements WeatherCollectorEndp
      * @throws WeatherException if the update can not be completed
      */
     public void addDataPoint(String iataCode, String pointType, DataPoint dp) throws WeatherException {
-        int airportDataIdx = getAirportDataIdx(iataCode);
-        AtmosphericInformation ai = atmosphericInformation.get(airportDataIdx);
+    	WeatherQueryEndpointServiceImpl service = new WeatherQueryEndpointServiceImpl();
+        int airportDataIdx = service.getAirportDataIdx(iataCode);
+        AtmosphericInformation ai = WeatherQueryEndpointServiceImpl.atmosphericInformation.get(airportDataIdx);
         updateAtmosphericInformation(ai, pointType, dp);
     }
 
@@ -101,10 +99,10 @@ public class WeatherCollectorEndpointServiceImpl implements WeatherCollectorEndp
      */
     public AirportData addAirport(String iataCode, double latitude, double longitude) {
         AirportData ad = new AirportData();
-        airportData.add(ad);
+        WeatherQueryEndpointServiceImpl.airportData.add(ad);
 
         AtmosphericInformation ai = new AtmosphericInformation();
-        atmosphericInformation.add(ai);
+        WeatherQueryEndpointServiceImpl.atmosphericInformation.add(ai);
         ad.setIata(iataCode);
         ad.setLatitude(latitude);
         ad.setLatitude(longitude);
