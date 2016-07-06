@@ -3,6 +3,7 @@ package com.crossover.trial.weather.controller.query.impl;
 import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
+import com.crossover.trial.weather.service.collector.impl.WeatherCollectorEndpointServiceImpl;
 import com.google.gson.Gson;
 
 import javax.ws.rs.Path;
@@ -10,8 +11,6 @@ import javax.ws.rs.core.Response;
 
 import java.util.*;
 import java.util.logging.Logger;
-
-import static com.crossover.trial.weather.controller.collector.impl.WeatherCollectorEndpointImpl.addAirport;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
@@ -190,11 +189,13 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
         atmosphericInformation.clear();
         requestFrequency.clear();
 
-        addAirport("BOS", 42.364347, -71.005181);
-        addAirport("EWR", 40.6925, -74.168667);
-        addAirport("JFK", 40.639751, -73.778925);
-        addAirport("LGA", 40.777245, -73.872608);
-        addAirport("MMU", 40.79935, -74.4148747);
+        WeatherCollectorEndpointServiceImpl service = new WeatherCollectorEndpointServiceImpl();  
+        
+        service.addAirport("BOS", 42.364347, -71.005181);
+        service.addAirport("EWR", 40.6925, -74.168667);
+        service.addAirport("JFK", 40.639751, -73.778925);
+        service.addAirport("LGA", 40.777245, -73.872608);
+        service.addAirport("MMU", 40.79935, -74.4148747);
     }
 
 }
