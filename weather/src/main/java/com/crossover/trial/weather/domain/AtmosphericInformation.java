@@ -28,7 +28,7 @@ public class AtmosphericInformation {
     private long lastUpdateTime;
 
     public AtmosphericInformation() {
-
+    	this.lastUpdateTime = System.currentTimeMillis();
     }
 
     protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity, DataPoint percipitation, DataPoint pressure, DataPoint cloudCover) {

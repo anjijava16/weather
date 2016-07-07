@@ -18,7 +18,7 @@ import com.crossover.trial.weather.service.AirportService;
 import com.google.gson.Gson;
 
 public class AirportServiceImpl implements AirportService {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(AirportServiceImpl.class.getName());
 
 	/** earth radius in KM */
@@ -61,10 +61,10 @@ public class AirportServiceImpl implements AirportService {
 	 * @throws WeatherException
 	 *             if the update can not be completed
 	 */
-	
+
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
-			throws WeatherException {		
+			throws WeatherException {
 		int airportDataIdx = getAirportDataIdx(iataCode);
 		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(airportDataIdx);
 		System.out.println(ai);
@@ -82,63 +82,52 @@ public class AirportServiceImpl implements AirportService {
 	 * @param dp
 	 *            the actual data point
 	 */
-	
+
 	@Override
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
 			DataPoint dp) throws WeatherException {
 		final DataPointType dptype = DataPointType.valueOf(pointType.toUpperCase());
 
-		if (pointType.equalsIgnoreCase(DataPointType.WIND.name())) {
+		switch (dptype) {
+		case WIND:
 			if (dp.getMean() >= 0) {
-				ai.setWind(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				
-				System.out.println(ai);
-				return;
+				ai.setWind(dp);				
 			}
-		}
+			break;
 
-		if (pointType.equalsIgnoreCase(DataPointType.TEMPERATURE.name())) {
+		case TEMPERATURE:
 			if (dp.getMean() >= -50 && dp.getMean() < 100) {
-				ai.setTemperature(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				return;
+				ai.setTemperature(dp);				
 			}
-		}
-
-		if (pointType.equalsIgnoreCase(DataPointType.HUMIDTY.name())) {
+			break;
+			
+		case HUMIDTY:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setHumidity(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				return;
+				ai.setHumidity(dp);				
 			}
-		}
-
-		if (pointType.equalsIgnoreCase(DataPointType.PRESSURE.name())) {
+			break;
+			
+		case PRESSURE:
 			if (dp.getMean() >= 650 && dp.getMean() < 800) {
-				ai.setPressure(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				return;
+				ai.setPressure(dp);				
 			}
-		}
+			break;
 
-		if (pointType.equalsIgnoreCase(DataPointType.CLOUDCOVER.name())) {
+		case CLOUDCOVER:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setCloudCover(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				return;
+				ai.setCloudCover(dp);				
 			}
-		}
-
-		if (pointType.equalsIgnoreCase(DataPointType.PRECIPITATION.name())) {
+			break;
+			
+		case PRECIPITATION:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setPrecipitation(dp);
-				ai.setLastUpdateTime(System.currentTimeMillis());
-				return;
+				ai.setPrecipitation(dp);				
 			}
+			break;
+			
+		default:
+			throw new IllegalStateException("couldn't update atmospheric data");
 		}
-
-		throw new IllegalStateException("couldn't update atmospheric data");
 	}
 
 	/**
@@ -174,7 +163,7 @@ public class AirportServiceImpl implements AirportService {
 		AirportServiceImpl.airportData.add(ad);
 
 		AtmosphericInformation ai = new AtmosphericInformation();
-		//TODO
+		// TODO
 		AirportServiceImpl.atmosphericInformation.add(ai);
 		ad.setIata(iataCode);
 		ad.setLatitude(latitude);
@@ -219,18 +208,18 @@ public class AirportServiceImpl implements AirportService {
 		}
 		return iataCodes;
 	}
-	
+
 	@Override
 	public void deleteAirport(String iataCode) {
-//        if (iataCode == null) {
-//            LOGGER.severe("Cannot delete airport");
-//            return;
-//        }
-//        deleteAtmosphericInformation(iataCode);
-//        getAirportDataStorage().remove(iataCode);
-		
+		// if (iataCode == null) {
+		// LOGGER.severe("Cannot delete airport");
+		// return;
+		// }
+		// deleteAtmosphericInformation(iataCode);
+		// getAirportDataStorage().remove(iataCode);
+
 		System.out.println("deleting....");
-		AirportData ad=findAirportData(iataCode);
+		AirportData ad = findAirportData(iataCode);
 		airportData.remove(ad);
 	}
 
@@ -257,9 +246,9 @@ public class AirportServiceImpl implements AirportService {
 	 * A dummy init method that loads hard coded data
 	 */
 	{
-		//airportData.clear();
-//		atmosphericInformation.clear();
-//		requestFrequency.clear();
+		// airportData.clear();
+		// atmosphericInformation.clear();
+		// requestFrequency.clear();
 		if (airportData.size() == 0) {
 			addAirport("BOS", 42.364347, -71.005181);
 			addAirport("EWR", 40.6925, -74.168667);
