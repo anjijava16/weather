@@ -8,13 +8,13 @@ import com.crossover.trial.weather.domain.DataPoint;
 import com.crossover.trial.weather.exception.WeatherException;
 
 public interface AirportService {
-	
+
 	public AirportData addAirport(String iataCode, double latitude, double longitude);
 
 	public AirportData findAirportData(String iataCode);
 
 	public void deleteAirport(String iataCode);
-	
+
 	public Set<String> getAllAirportIataCodes();
 
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
@@ -22,4 +22,6 @@ public interface AirportService {
 
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
 			DataPoint dp) throws WeatherException;
+
+	public double calculateDistance(AirportData ad1, AirportData ad2);
 }

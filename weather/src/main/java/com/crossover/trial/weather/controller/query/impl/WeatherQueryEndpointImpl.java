@@ -100,6 +100,10 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     @Override
     
     public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
+    	
+    	
+    	System.out.println("weather....iata...");
+    	
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
         
         AirportServiceImpl service = new AirportServiceImpl();
@@ -113,8 +117,8 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
             for (int i=0;i< airportData.size(); i++){
                 if (service.calculateDistance(ad, airportData.get(i)) <= radius){
                     AtmosphericInformation ai = atmosphericInformation.get(i);
-                    if (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
-                       || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null){
+                    if ((ai!=null) && (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
+                       || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null)){
                         retval.add(ai);
                     }
                 }

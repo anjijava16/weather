@@ -48,12 +48,17 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	public Response updateWeather(@PathParam("iata") String iataCode,
 			@PathParam("pointType") String pointType, String datapointJson) {
 
+        if (iataCode == null || iataCode.length() != 3 ){
+            LOGGER.severe( "Bad parameters: iata = " + iataCode );
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }    	                
+        
 		AirportServiceImpl service = new AirportServiceImpl();
 
 		try {
 			service.addDataPoint(iataCode, pointType, gson.fromJson(datapointJson, DataPoint.class));
 		} catch (WeatherException e) {
-			e.printStackTrace();
+			 return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		return Response.status(Response.Status.OK).build();
 	}
@@ -117,9 +122,9 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
         }
 
 		AirportServiceImpl service = new AirportServiceImpl();
-		service.addAirport(iata, latitude, longitude);
-
-		return Response.status(Response.Status.OK).build();
+		AirportData ad=service.addAirport(iata, latitude, longitude);
+		
+		return Response.status(Response.Status.OK).entity("successfully added:"+ ad).build();
 	}
 
 	@DELETE

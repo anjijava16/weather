@@ -3,12 +3,13 @@ package com.crossover.trial.weather.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import com.crossover.trial.weather.controller.collector.WeatherCollectorEndpoint;
+import com.crossover.trial.weather.controller.collector.impl.WeatherCollectorEndpointImpl;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
 import com.crossover.trial.weather.domain.DataPoint;
@@ -31,7 +32,7 @@ public class AirportServiceImpl implements AirportService {
 	public static List<AirportData> airportData = new ArrayList<>();
 
 	/**
-	 * atmospheric information for each airport, idx corresponds with
+	 * atmospheric information for each airport, iataCode corresponds with
 	 * airportData
 	 */
 	public static Map<String , AtmosphericInformation> atmosphericInformation = new HashMap<>();
@@ -65,8 +66,8 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
 			throws WeatherException {
-		//int airportDataIdx = getAirportDataIdx(iataCode);
-		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(iataCode);
+		
+		AtmosphericInformation ai = atmosphericInformation.get(iataCode);
 		System.out.println(ai);
 		updateAtmosphericInformation(ai, pointType, dp);
 		
@@ -86,51 +87,55 @@ public class AirportServiceImpl implements AirportService {
 	 * @param dp
 	 *            the actual data point
 	 */
+	
 
 	@Override
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
 			DataPoint dp) throws WeatherException {
-		final DataPointType dptype = DataPointType.valueOf(pointType.toUpperCase());
+
+		DataPointType dptype = null;
+		try {
+			dptype = DataPointType.valueOf(pointType.toUpperCase());
+		} catch (IllegalArgumentException ex) {
+			throw new WeatherException();
+		}
 
 		switch (dptype) {
 		case WIND:
 			if (dp.getMean() >= 0) {
-				ai.setWind(dp);				
+				ai.setWind(dp);
 			}
 			break;
 
 		case TEMPERATURE:
 			if (dp.getMean() >= -50 && dp.getMean() < 100) {
-				ai.setTemperature(dp);				
+				ai.setTemperature(dp);
 			}
 			break;
-			
+
 		case HUMIDTY:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setHumidity(dp);				
+				ai.setHumidity(dp);
 			}
 			break;
-			
+
 		case PRESSURE:
 			if (dp.getMean() >= 650 && dp.getMean() < 800) {
-				ai.setPressure(dp);				
+				ai.setPressure(dp);
 			}
 			break;
 
 		case CLOUDCOVER:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setCloudCover(dp);				
+				ai.setCloudCover(dp);
 			}
 			break;
-			
+
 		case PRECIPITATION:
 			if (dp.getMean() >= 0 && dp.getMean() < 100) {
-				ai.setPrecipitation(dp);				
+				ai.setPrecipitation(dp);
 			}
 			break;
-			
-		default:
-			throw new IllegalStateException("couldn't update atmospheric data");
 		}
 	}
 
@@ -232,6 +237,7 @@ public class AirportServiceImpl implements AirportService {
 	 * @return the distance in KM
 	 */
 
+	@Override
 	public double calculateDistance(AirportData ad1, AirportData ad2) {
 		double deltaLat = Math.toRadians(ad2.getLatitude() - ad1.getLatitude());
 		double deltaLon = Math.toRadians(ad2.getLongitude() - ad1.getLongitude());
@@ -254,6 +260,16 @@ public class AirportServiceImpl implements AirportService {
 			addAirport("JFK", 40.639751, -73.778925);
 			addAirport("LGA", 40.777245, -73.872608);
 			addAirport("MMU", 40.79935, -74.4148747);
+		}
+		
+		if(atmosphericInformation.size()==0){
+			
+			 Gson _gson = new Gson();
+			DataPoint _dp = new DataPoint.Builder().withCount(10).withFirst(10).withMedian(20).withLast(30)
+					.withMean(22).build();
+			
+			 WeatherCollectorEndpoint _update = new WeatherCollectorEndpointImpl();
+			 _update.updateWeather("JFK", "wind", _gson.toJson(_dp));	
 		}
 	}
 
