@@ -61,10 +61,11 @@ public class AirportServiceImpl implements AirportService {
 	 * @throws WeatherException
 	 *             if the update can not be completed
 	 */
+	
+	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
-			throws WeatherException {
-		AirportServiceImpl service = new AirportServiceImpl();
-		int airportDataIdx = service.getAirportDataIdx(iataCode);
+			throws WeatherException {		
+		int airportDataIdx = getAirportDataIdx(iataCode);
 		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(airportDataIdx);
 		updateAtmosphericInformation(ai, pointType, dp);
 	}
@@ -80,6 +81,8 @@ public class AirportServiceImpl implements AirportService {
 	 * @param dp
 	 *            the actual data point
 	 */
+	
+	@Override
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
 			DataPoint dp) throws WeatherException {
 		final DataPointType dptype = DataPointType.valueOf(pointType.toUpperCase());
