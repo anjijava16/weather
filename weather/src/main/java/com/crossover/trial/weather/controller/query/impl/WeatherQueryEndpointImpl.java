@@ -27,6 +27,10 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
 
+    public static void init(){
+    	AirportServiceImpl service = new AirportServiceImpl();
+    }
+    
 //    static {
 //        init();
 //    }
@@ -54,6 +58,7 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
                 }
             }
         }
+        System.out.println("datasize: " +datasize);
         retval.put("datasize", datasize);
 
         Map<String, Double> freq = new HashMap<>();
