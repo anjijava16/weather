@@ -67,6 +67,7 @@ public class AirportServiceImpl implements AirportService {
 			throws WeatherException {		
 		int airportDataIdx = getAirportDataIdx(iataCode);
 		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(airportDataIdx);
+		System.out.println(ai);
 		updateAtmosphericInformation(ai, pointType, dp);
 	}
 
@@ -91,6 +92,8 @@ public class AirportServiceImpl implements AirportService {
 			if (dp.getMean() >= 0) {
 				ai.setWind(dp);
 				ai.setLastUpdateTime(System.currentTimeMillis());
+				
+				System.out.println(ai);
 				return;
 			}
 		}
