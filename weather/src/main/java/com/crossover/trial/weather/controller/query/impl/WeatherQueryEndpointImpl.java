@@ -3,9 +3,7 @@ package com.crossover.trial.weather.controller.query.impl;
 import com.crossover.trial.weather.controller.query.WeatherQueryEndpoint;
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
-import com.crossover.trial.weather.service.collector.impl.WeatherCollectorEndpointServiceImpl;
-import com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl;
-import com.google.gson.Gson;
+import com.crossover.trial.weather.service.impl.AirportServiceImpl;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.crossover.trial.weather.service.query.impl.WeatherQueryEndpointServiceImpl.*;
+import static com.crossover.trial.weather.service.impl.AirportServiceImpl.*;
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
  * held in memory. The end point deploys to a single container
@@ -29,9 +27,9 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
 
-    static {
-        init();
-    }
+//    static {
+//        init();
+//    }
     /**
      * Retrieve service health including total size of valid data points and request frequency information.
      *
@@ -97,7 +95,7 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
         
-        WeatherQueryEndpointServiceImpl service = new WeatherQueryEndpointServiceImpl();
+        AirportServiceImpl service = new AirportServiceImpl();
         service.updateRequestFrequency(iata, radius);
 
         List<AtmosphericInformation> retval = new ArrayList<>();
