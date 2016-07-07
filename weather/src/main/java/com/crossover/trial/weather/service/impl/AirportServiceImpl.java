@@ -34,7 +34,7 @@ public class AirportServiceImpl implements AirportService {
 	 * atmospheric information for each airport, idx corresponds with
 	 * airportData
 	 */
-	public static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>();
+	public static Map<String , AtmosphericInformation> atmosphericInformation = new HashMap<>();
 
 	/**
 	 * Internal performance counter to better understand most requested
@@ -65,10 +65,14 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
 			throws WeatherException {
-		int airportDataIdx = getAirportDataIdx(iataCode);
-		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(airportDataIdx);
+		//int airportDataIdx = getAirportDataIdx(iataCode);
+		AtmosphericInformation ai = AirportServiceImpl.atmosphericInformation.get(iataCode);
 		System.out.println(ai);
 		updateAtmosphericInformation(ai, pointType, dp);
+		
+		System.out.println("addDataPoint");
+		System.out.println(airportData);
+		System.out.println(atmosphericInformation);
 	}
 
 	/**
@@ -164,7 +168,7 @@ public class AirportServiceImpl implements AirportService {
 
 		AtmosphericInformation ai = new AtmosphericInformation();
 		// TODO
-		AirportServiceImpl.atmosphericInformation.add(ai);
+		AirportServiceImpl.atmosphericInformation.put(iataCode,ai);
 		ad.setIata(iataCode);
 		ad.setLatitude(latitude);
 		ad.setLongitude(longitude);
@@ -219,6 +223,7 @@ public class AirportServiceImpl implements AirportService {
 		// getAirportDataStorage().remove(iataCode);
 
 		System.out.println("deleting....");
+		atmosphericInformation.remove(iataCode);
 		AirportData ad = findAirportData(iataCode);
 		airportData.remove(ad);
 	}

@@ -35,11 +35,15 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	/** shared gson json to object factory */
 	public final static Gson gson = new Gson();
 
+    @GET
+    @Path("/ping")
 	@Override
 	public Response ping() {
 		return Response.status(Response.Status.OK).entity("ready").build();
 	}
 
+    @POST
+    @Path("/weather/{iata}/{pointType}")
 	@Override
 	public Response updateWeather(@PathParam("iata") String iataCode,
 			@PathParam("pointType") String pointType, String datapointJson) {

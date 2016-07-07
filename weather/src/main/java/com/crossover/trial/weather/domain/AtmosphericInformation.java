@@ -6,6 +6,9 @@ package com.crossover.trial.weather.domain;
  */
 public class AtmosphericInformation {
 
+	//key for AtmosphericInformation
+	private String iata;
+	
     /** temperature in degrees celsius */
     private DataPoint temperature;
 
@@ -29,16 +32,6 @@ public class AtmosphericInformation {
 
     public AtmosphericInformation() {
     	this.lastUpdateTime = System.currentTimeMillis();
-    }
-
-    protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity, DataPoint percipitation, DataPoint pressure, DataPoint cloudCover) {
-        this.temperature = temperature;
-        this.wind = wind;
-        this.humidity = humidity;
-        this.precipitation = percipitation;
-        this.pressure = pressure;
-        this.cloudCover = cloudCover;
-        this.lastUpdateTime = System.currentTimeMillis();
     }
 
     public DataPoint getTemperature() {
@@ -84,13 +77,23 @@ public class AtmosphericInformation {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+	public String getIata() {
+		return iata;
+	}
+
+	public void setIata(String iata) {
+		this.iata = iata;
+	}
+
 	@Override
 	public String toString() {
-		return "AtmosphericInformation [temperature=" + temperature + ", wind=" + wind
-				+ ", humidity=" + humidity + ", precipitation=" + precipitation + ", pressure="
-				+ pressure + ", cloudCover=" + cloudCover + ", lastUpdateTime=" + lastUpdateTime
-				+ "]";
+		return "AtmosphericInformation [iata=" + iata + ", temperature=" + temperature + ", wind="
+				+ wind + ", humidity=" + humidity + ", precipitation=" + precipitation
+				+ ", pressure=" + pressure + ", cloudCover=" + cloudCover + ", lastUpdateTime="
+				+ lastUpdateTime + "]";
 	}
+
+
     
     
 }

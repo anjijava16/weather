@@ -44,7 +44,9 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
         Map<String, Object> retval = new HashMap<>();
 
         int datasize = 0;
-        for (AtmosphericInformation ai : atmosphericInformation) {
+        for (String key  : atmosphericInformation.keySet()) {
+        	
+        	AtmosphericInformation ai = atmosphericInformation.get(key);
             // we only count recent readings
             if (ai.getCloudCover() != null
                 || ai.getHumidity() != null
