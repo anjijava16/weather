@@ -116,7 +116,7 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
             AirportData ad = service.findAirportData(iata);
             for (int i=0;i< airportData.size(); i++){
                 if (service.calculateDistance(ad, airportData.get(i)) <= radius){
-                    AtmosphericInformation ai = atmosphericInformation.get(i);
+                    AtmosphericInformation ai = atmosphericInformation.get(iata);
                     if ((ai!=null) && (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
                        || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null)){
                         retval.add(ai);

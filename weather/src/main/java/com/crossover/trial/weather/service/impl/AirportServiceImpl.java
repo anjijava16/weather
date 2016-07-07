@@ -172,6 +172,7 @@ public class AirportServiceImpl implements AirportService {
 		AirportServiceImpl.airportData.add(ad);
 
 		AtmosphericInformation ai = new AtmosphericInformation();
+		ai.setIata(iataCode);
 		// TODO
 		AirportServiceImpl.atmosphericInformation.put(iataCode,ai);
 		ad.setIata(iataCode);
@@ -262,15 +263,21 @@ public class AirportServiceImpl implements AirportService {
 			addAirport("MMU", 40.79935, -74.4148747);
 		}
 		
-		if(atmosphericInformation.size()==0){
+		
+									
 			
-			 Gson _gson = new Gson();
+			AtmosphericInformation ai = new AtmosphericInformation();
+			
 			DataPoint _dp = new DataPoint.Builder().withCount(10).withFirst(10).withMedian(20).withLast(30)
-					.withMean(22).build();
+					.withMean(22).build();						
+			ai.setWind(_dp);
 			
-			 WeatherCollectorEndpoint _update = new WeatherCollectorEndpointImpl();
-			 _update.updateWeather("JFK", "wind", _gson.toJson(_dp));	
-		}
+			atmosphericInformation.put("JFK", ai);
+			
+			
+			System.out.println(atmosphericInformation);
+
+		
 	}
 
 }
