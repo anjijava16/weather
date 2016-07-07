@@ -1,5 +1,6 @@
 package com.crossover.trial.weather.controller.collector.impl;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -61,7 +62,7 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	public Response getAirports() {
 
 		System.out.println("getAirports...");
-		Set<String> retval;
+		Set<String> retval = new HashSet<>();
 		
 		AirportServiceImpl service = new AirportServiceImpl();
 		retval=service.getAllAirportIataCodes();
@@ -96,8 +97,8 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         
-        double latitude;
-        double longitude;
+        Double latitude;
+        Double longitude;
         try {
             latitude = Double.valueOf(latString);
             longitude = Double.valueOf(longString);
