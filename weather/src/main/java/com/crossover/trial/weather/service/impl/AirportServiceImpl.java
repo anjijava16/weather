@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.crossover.trial.weather.domain.AirportData;
 import com.crossover.trial.weather.domain.AtmosphericInformation;
@@ -17,6 +18,8 @@ import com.crossover.trial.weather.service.AirportService;
 import com.google.gson.Gson;
 
 public class AirportServiceImpl implements AirportService {
+	
+	private static final Logger LOGGER = Logger.getLogger(AirportServiceImpl.class.getName());
 
 	/** earth radius in KM */
 	public static final double R = 6372.8;

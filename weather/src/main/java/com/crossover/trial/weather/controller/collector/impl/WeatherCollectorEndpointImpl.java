@@ -1,6 +1,5 @@
 package com.crossover.trial.weather.controller.collector.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -62,7 +61,7 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	public Response getAirports() {
 
 		System.out.println("getAirports...");
-		Set<String> retval = new HashSet<>();
+		Set<String> retval;
 		
 		AirportServiceImpl service = new AirportServiceImpl();
 		retval=service.getAllAirportIataCodes();
@@ -90,9 +89,30 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	public Response addAirport(@PathParam("iata") String iata, @PathParam("lat") String latString,
 			@PathParam("long") String longString) {
 		System.out.println("addAirport...");
+		
+
+        if (iata == null || iata.length() != 3 || latString == null || longString == null) {
+            LOGGER.severe( "Bad parameters: iata = " + iata + ", latString = " + latString + ", longString = " + longString);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        
+        double latitude;
+        double longitude;
+        try {
+            latitude = Double.valueOf(latString);
+            longitude = Double.valueOf(longString);
+        } catch (NumberFormatException ex) {
+            LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
 		AirportServiceImpl service = new AirportServiceImpl();
-		service.addAirport(iata, Double.valueOf(latString), Double.valueOf(longString));
+		service.addAirport(iata, latitude, longitude);
 
 		return Response.status(Response.Status.OK).build();
 	}
