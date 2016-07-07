@@ -35,7 +35,7 @@ public class AirportServiceImpl implements AirportService {
 	 * atmospheric information for each airport, iataCode corresponds with
 	 * airportData
 	 */
-	public static Map<String , AtmosphericInformation> atmosphericInformation = new HashMap<>();
+	public static Map<String, AtmosphericInformation> atmosphericInformation = new HashMap<>();
 
 	/**
 	 * Internal performance counter to better understand most requested
@@ -66,14 +66,19 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
 			throws WeatherException {
+
+		AtmosphericInformation ai = atmosphericInformation.get(iataCode);				
+		if(ai==null) {
+			ai= new AtmosphericInformation();
+			ai.setIata(iataCode);
+			
+			atmosphericInformation.put(iataCode, ai);
+		}
 		
-		AtmosphericInformation ai = atmosphericInformation.get(iataCode);
-		System.out.println(ai);
 		updateAtmosphericInformation(ai, pointType, dp);
 		
-		System.out.println("addDataPoint");
-		System.out.println(airportData);
-		System.out.println(atmosphericInformation);
+		System.out.println("airportdata : "+airportData);
+		System.out.println("atmosphericInformation:"+atmosphericInformation);
 	}
 
 	/**
@@ -87,7 +92,6 @@ public class AirportServiceImpl implements AirportService {
 	 * @param dp
 	 *            the actual data point
 	 */
-	
 
 	@Override
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
@@ -166,19 +170,18 @@ public class AirportServiceImpl implements AirportService {
 	 * @return the added airport
 	 */
 
+
 	@Override
 	public AirportData addAirport(String iataCode, double latitude, double longitude) {
-		AirportData ad = new AirportData();
-		AirportServiceImpl.airportData.add(ad);
-
-		AtmosphericInformation ai = new AtmosphericInformation();
-		ai.setIata(iataCode);
-		// TODO
-		AirportServiceImpl.atmosphericInformation.put(iataCode,ai);
-		ad.setIata(iataCode);
-		ad.setLatitude(latitude);
-		ad.setLongitude(longitude);
+		AirportData ad = new AirportData.Builder().withIata(iataCode).withLatitude(latitude)
+				.withLongitude(longitude).build();
+		//check already added
+		if(findAirportData(iataCode)==null){
+			AirportServiceImpl.airportData.add(ad);				
+			
+		}
 		return ad;
+
 	}
 
 	/**
@@ -202,7 +205,7 @@ public class AirportServiceImpl implements AirportService {
 	 *            as a string
 	 * @return airport data or null if not found
 	 */
- 
+
 	@Override
 	public Set<String> getAllAirportIataCodes() {
 
@@ -248,36 +251,31 @@ public class AirportServiceImpl implements AirportService {
 		return R * c;
 	}
 
-	/**
-	 * A dummy init method that loads hard coded data
-	 */
-	{
-		// airportData.clear();
-		// atmosphericInformation.clear();
-		// requestFrequency.clear();
-		if (airportData.size() == 0) {
-			addAirport("BOS", 42.364347, -71.005181);
-			addAirport("EWR", 40.6925, -74.168667);
-			addAirport("JFK", 40.639751, -73.778925);
-			addAirport("LGA", 40.777245, -73.872608);
-			addAirport("MMU", 40.79935, -74.4148747);
-		}
-		
-		
-									
-			
-			AtmosphericInformation ai = new AtmosphericInformation();
-			
-			DataPoint _dp = new DataPoint.Builder().withCount(10).withFirst(10).withMedian(20).withLast(30)
-					.withMean(22).build();						
-			ai.setWind(_dp);
-			
-			atmosphericInformation.put("JFK", ai);
-			
-			
-			System.out.println(atmosphericInformation);
-
-		
-	}
+//	/**
+//	 * A dummy init method that loads hard coded data
+//	 */
+//	{
+//		// airportData.clear();
+//		// atmosphericInformation.clear();
+//		// requestFrequency.clear();
+//		if (airportData.size() == 0) {
+//			addAirport("BOS", 42.364347, -71.005181);
+//			addAirport("EWR", 40.6925, -74.168667);
+//			addAirport("JFK", 40.639751, -73.778925);
+//			addAirport("LGA", 40.777245, -73.872608);
+//			addAirport("MMU", 40.79935, -74.4148747);
+//		}
+//
+//		AtmosphericInformation ai = new AtmosphericInformation();
+//
+//		DataPoint _dp = new DataPoint.Builder().withCount(10).withFirst(10).withMedian(20)
+//				.withLast(30).withMean(22).build();
+//		ai.setWind(_dp);
+//
+//		atmosphericInformation.put("JFK", ai);
+//
+//		System.out.println(atmosphericInformation);
+//
+//	}
 
 }

@@ -98,7 +98,7 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	@Override
 	public Response addAirport(@PathParam("iata") String iata, @PathParam("lat") String latString,
 			@PathParam("long") String longString) {
-		System.out.println("addAirport...");
+		//System.out.println("addAirport...");
 		
 
         if (iata == null || iata.length() != 3 || latString == null || longString == null) {
