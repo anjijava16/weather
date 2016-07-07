@@ -106,9 +106,8 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
         service.updateRequestFrequency(iata, radius);
 
         List<AtmosphericInformation> retval = new ArrayList<>();
-        if (radius == 0) {
-            int idx = service.getAirportDataIdx(iata);
-            retval.add(atmosphericInformation.get(idx));
+        if (radius == 0) {                                  
+            retval.add(atmosphericInformation.get(iata));
         } else {
             AirportData ad = service.findAirportData(iata);
             for (int i=0;i< airportData.size(); i++){

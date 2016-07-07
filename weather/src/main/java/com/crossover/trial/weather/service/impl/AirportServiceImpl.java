@@ -196,13 +196,7 @@ public class AirportServiceImpl implements AirportService {
 	 *            as a string
 	 * @return airport data or null if not found
 	 */
-
-	@Override
-	public int getAirportDataIdx(String iataCode) {
-		AirportData ad = findAirportData(iataCode);
-		return airportData.indexOf(ad);
-	}
-
+ 
 	@Override
 	public Set<String> getAllAirportIataCodes() {
 
