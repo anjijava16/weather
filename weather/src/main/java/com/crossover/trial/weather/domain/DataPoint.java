@@ -10,6 +10,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author code test administrator
  */
 public class DataPoint {
+	
+	// committed ;
+	// 0 - fixed BuilderPattern bugs
+	// 1 - public properties are restricted to private for better encapsulation.
 
 	private double mean = 0.0;
 
@@ -25,12 +29,12 @@ public class DataPoint {
 	private DataPoint() {
 	}
 
-	protected DataPoint(int first, int second, int third, double mean, int count) {
-		this.setFirst(first);
-		this.setMean(mean);
-		this.setSecond(second);
-		this.setThird(third);
-		this.setCount(count);
+	protected DataPoint(Builder builder) {
+		this.first = builder.first;
+		this.second = builder.median;
+		this.third = builder.last;
+		this.mean = builder.mean;
+		this.count = builder.count;
 	}
 
 	/** the mean of the observations */
@@ -86,10 +90,10 @@ public class DataPoint {
 		return this.toString().equals(that.toString());
 	}
 
-	static public class Builder {
-		private int first;		
-		private int median; //second
-		private int last; //third
+	public static class Builder {
+		private int first;
+		private int median; // second
+		private int last; // third
 		private double mean;
 		private int count;
 
@@ -101,7 +105,7 @@ public class DataPoint {
 			return this;
 		}
 
-		// ortanca /second
+		// second
 		public Builder withMedian(int median) {
 			this.median = median;
 			return this;
@@ -113,7 +117,7 @@ public class DataPoint {
 			return this;
 		}
 
-		// ortalama
+		// average
 		public Builder withMean(double mean) {
 			this.mean = mean;
 			return this;
@@ -125,7 +129,7 @@ public class DataPoint {
 		}
 
 		public DataPoint build() {
-			return new DataPoint(this.first, this.median, this.last, this.mean, this.count);
+			return new DataPoint(this);
 		}
 	}
 }
