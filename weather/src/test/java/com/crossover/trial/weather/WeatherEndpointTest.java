@@ -48,11 +48,14 @@ public class WeatherEndpointTest {
         .withCount(10).withFirst(19).withMedian(25).withLast(35).withMean(28).build();
         _update.updateWeather("BOS","TEMPERATURE", _gson.toJson(_dp2));
 //        
-//        DataPoint _dp3 = new DataPoint.Builder()
-//        .withCount(20).withFirst(40).withMedian(30).withLast(35).withMean(12).build();
-//        _update.updateWeather("JFK", "TEMPERATURE",  _gson.toJson(_dp3));
+        DataPoint _dp3 = new DataPoint.Builder()
+        .withCount(20).withFirst(40).withMedian(30).withLast(35).withMean(12).build();
+        _update.updateWeather("JFK", "TEMPERATURE",  _gson.toJson(_dp3));
 //        
         Object o=_query.weather("BOS", "0").getEntity();
+        Object o6=_query.weather("BOS", "0.5").getEntity();
+        Object o7=_query.weather("BOS", "0.9").getEntity();
+        
         Object o2=_query.weather("BOS", "10").getEntity();
         
         Object o3=_query.weather("JFK", "10").getEntity();

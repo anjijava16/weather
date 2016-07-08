@@ -25,7 +25,7 @@ import static com.crossover.trial.weather.service.impl.AirportServiceImpl.*;
 @Path("/query")
 public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
-    public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
+    public final static Logger LOGGER = Logger.getLogger("WeatherQueryEndpointImpl");
     
 //    static {
 //        init();
@@ -35,53 +35,101 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
      *
      * @return health stats for the service as a string
      */
-    @Override
-    public String ping() {
-        Map<String, Object> retval = new HashMap<>();
+    
 
-     	//System.out.println(atmosphericInformationMap);
-        
-        int datasize = 0;
-        for (String key  : atmosphericInformationMap.keySet()) {
-        	
-        	AtmosphericInformation ai = atmosphericInformationMap.get(key);        	       
-            // we only count recent readings
-            if (ai.getCloudCover() != null
-                || ai.getHumidity() != null
-                || ai.getPressure() != null
-                || ai.getPrecipitation() != null
-                || ai.getTemperature() != null
-                || ai.getWind() != null) {
-                // updated in the last day
-                if (ai.getLastUpdateTime() > System.currentTimeMillis() - 86400000) {
-                    datasize++;
-                }
-            }
-        }
-        //System.out.println("datasize: " +datasize);
-        retval.put("datasize", datasize);
+	private int count(long lastUpdateTime, int datasize) {
+		if (lastUpdateTime > System.currentTimeMillis() - 86400000) {
+			return datasize + 1;
+		}
+		return datasize;
 
-        Map<String, Double> freq = new HashMap<>();
-        // fraction of queries
-        for (AirportData data : airportData) {
-            double frac = (double)requestFrequency.getOrDefault(data, 0) / requestFrequency.size();
-            freq.put(data.getIata(), frac);
-        }
-        retval.put("iata_freq", freq);
+	}
 
-        int m = radiusFreq.keySet().stream()
-                .max(Double::compare)
-                .orElse(1000.0).intValue() + 1;
+	@Override
+	public String ping() {
+		Map<String, Object> retval = new HashMap<>();
 
-        int[] hist = new int[m];
-        for (Map.Entry<Double, Integer> e : radiusFreq.entrySet()) {
-            int i = e.getKey().intValue() % 10;
-            hist[i] += e.getValue();
-        }
-        retval.put("radius_freq", hist);
+		// System.out.println(atmosphericInformationMap);
 
-        return gson.toJson(retval);
-    }
+		int datasize = 0;
+		for (String key : atmosphericInformationMap.keySet()) {
+
+			AtmosphericInformation ai = atmosphericInformationMap.get(key);
+			// we only count recent readings
+
+			long lastUpdateTime = ai.getLastUpdateTime();
+			if (ai.getCloudCover() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+			if (ai.getHumidity() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+			if (ai.getPressure() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+			if (ai.getPrecipitation() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+			if (ai.getTemperature() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+			if (ai.getWind() != null) {
+				datasize = count(lastUpdateTime, datasize);
+			}
+
+		}
+		// System.out.println("datasize: " +datasize);
+		retval.put("datasize", datasize);
+
+		Map<String, Double> freq = new HashMap<>();
+		// fraction of queries
+
+		int totalRequest = 0;
+		for (int requestCount : requestFrequency.values()) {
+			totalRequest = totalRequest + requestCount;
+		}
+		// fixed
+		for (AirportData data : airportData) {
+			double frac = (double) requestFrequency.getOrDefault(data, 0) / totalRequest;
+			freq.put(data.getIata(), frac);
+		}
+		retval.put("iata_freq", freq);
+
+		// find maximum radis which is requested.
+		// [0-maximum radis]
+		int m = radiusFrequency.keySet().stream().max(Double::compare).orElse(1000.0).intValue() + 1;
+
+		int[] hist = new int[m];
+		for (Map.Entry<Double, Integer> e : radiusFrequency.entrySet()) {
+			int i = e.getKey().intValue(); // round lower
+			// sum for radius same double ( 0.0 --- 0.9 radiuses are all 0)
+			hist[i] = hist[i] + e.getValue();
+		}
+		retval.put("radius_freq", hist);
+
+		return gson.toJson(retval);
+	}
+    
+    public static void main(String[] args) {
+    	ArrayList<Double> a = new ArrayList<Double>();
+    	
+//    	a.add(10.2);
+//    	a.add(20.5);
+//    	a.add(20.5);
+//    	a.add(1071.2);
+//    	a.add(20.5);
+    	
+    	  int m = a.stream()
+                  .max(Double::compare)
+                  .orElse(1000.0).intValue() + 1;
+    	  
+    	  System.out.println(m);
+	}
 
     /**
      * Given a query in json format {'iata': CODE, 'radius': km} extracts the requested airport information and
@@ -111,19 +159,19 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
             retval.add(atmosphericInformationMap.get(iata));
         } else {
             AirportData ad = service.findAirportData(iata);
-            System.out.println("found : " + ad);
+            //System.out.println("found : " + ad);
             //System.out.println("airport data : " + airportData);
             for (int i=0;i< airportData.size(); i++){
             	double distance=service.calculateDistance(ad, airportData.get(i));
-             	System.out.println();
-            	System.out.println(distance + " " + airportData.get(i));
+             	//System.out.println();
+            	//System.out.println(distance + " " + airportData.get(i));
                 if (distance<= radius){               
                     AtmosphericInformation ai = atmosphericInformationMap.get(airportData.get(i).getIata());
-                    System.out.println("ai before : "+ ai);
+                    //System.out.println("ai before : "+ ai);
                     if (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
                             || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null){
                              retval.add(ai);
-                        System.out.println("ai next : " + iata + " | " + ai);
+                        //System.out.println("ai next : " + iata + " | " + ai);
                     }
                 }
             }

@@ -47,7 +47,7 @@ public class AirportServiceImpl implements AirportService {
 	 */
 	public static Map<AirportData, Integer> requestFrequency = new HashMap<AirportData, Integer>();
 
-	public static Map<Double, Integer> radiusFreq = new HashMap<Double, Integer>();
+	public static Map<Double, Integer> radiusFrequency = new HashMap<Double, Integer>();
 
 	/**
 	 * Update the airports weather data with the collected data.
@@ -145,7 +145,7 @@ public class AirportServiceImpl implements AirportService {
 	public void updateRequestFrequency(String iata, Double radius) {
 		AirportData airportData = findAirportData(iata);
 		requestFrequency.put(airportData, requestFrequency.getOrDefault(airportData, 0) + 1);
-		radiusFreq.put(radius, radiusFreq.getOrDefault(radius, 0));
+		radiusFrequency.put(radius, radiusFrequency.getOrDefault(radius, 0)+1);
 	}
 
 	/**
