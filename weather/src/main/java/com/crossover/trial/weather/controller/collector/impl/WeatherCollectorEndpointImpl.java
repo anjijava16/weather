@@ -29,41 +29,40 @@ import com.google.gson.Gson;
 
 @Path("/collect")
 public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
-	public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class
-			.getName());
+	public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class.getName());
 
 	/** shared gson json to object factory */
 	public final static Gson gson = new Gson();
 
-    @GET
-    @Path("/ping")
+	@GET
+	@Path("/ping")
 	@Override
 	public Response ping() {
 		return Response.status(Response.Status.OK).entity("ready").build();
 	}
 
-    @POST
-    @Path("/weather/{iata}/{pointType}")
+	@POST
+	@Path("/weather/{iata}/{pointType}")
 	@Override
-	public Response updateWeather(@PathParam("iata") String iataCode,
-			@PathParam("pointType") String pointType, String datapointJson) {
+	public Response updateWeather(@PathParam("iata") String iataCode, @PathParam("pointType") String pointType,
+			String datapointJson) {
 
-        if (iataCode == null || iataCode.length() != 3 ){
-            LOGGER.severe( "Bad parameters: iata = " + iataCode );
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }    	                
-        
+		if (iataCode == null || iataCode.length() != 3) {
+			LOGGER.severe("Bad parameters: iata = " + iataCode);
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
 		AirportServiceImpl service = new AirportServiceImpl();
 
 		try {
 			service.addDataPoint(iataCode, pointType, gson.fromJson(datapointJson, DataPoint.class));
 		} catch (WeatherException e) {
-			 return Response.status(Response.Status.BAD_REQUEST).build();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		return Response.status(Response.Status.OK).build();
 	}
 
-	//http://localhost:9090/collect/airports
+	// http://localhost:9090/collect/airports
 	@GET
 	@Path("/airports")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -72,14 +71,14 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 
 		System.out.println("getAirports...");
 		Set<String> retval = new HashSet<>();
-		
+
 		AirportServiceImpl service = new AirportServiceImpl();
-		retval=service.getAllAirportIataCodes();
-		
+		retval = service.getAllAirportIataCodes();
+
 		return Response.status(Response.Status.OK).entity(retval).build();
 	}
 
-	//http://localhost:9090/collect/airport/EWR
+	// http://localhost:9090/collect/airport/EWR
 	@GET
 	@Path("/airport/{iata}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -91,50 +90,55 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 		return Response.status(Response.Status.OK).entity(ad).build();
 	}
 
-	//http://localhost:9090/collect/airport/IST/40.9829928/28.8082538
+	// http://localhost:9090/collect/airport/IST/40.9829928/28.8082538
 	@POST
 	@Path("/airport/{iata}/{lat}/{long}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Response addAirport(@PathParam("iata") String iata, @PathParam("lat") String latString,
+	public Response addAirport(@PathParam("iata") String iataCode, @PathParam("lat") String latString,
 			@PathParam("long") String longString) {
-		//System.out.println("addAirport...");
-		
+		// System.out.println("addAirport...");
 
-        if (iata == null || iata.length() != 3 || latString == null || longString == null) {
-            LOGGER.severe( "Bad parameters: iata = " + iata + ", latString = " + latString + ", longString = " + longString);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        
-        Double latitude;
-        Double longitude;
-        try {
-            latitude = Double.valueOf(latString);
-            longitude = Double.valueOf(longString);
-        } catch (NumberFormatException ex) {
-            LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+		if (iataCode == null || iataCode.length() != 3 || latString == null || longString == null) {
+			LOGGER.severe("Bad parameters: iata = " + iataCode + ", latString = " + latString + ", longString = "
+					+ longString);
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
 
-        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-            LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+		Double latitude;
+		Double longitude;
+		try {
+			latitude = Double.valueOf(latString);
+			longitude = Double.valueOf(longString);
+		} catch (NumberFormatException ex) {
+			LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
+		if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+			LOGGER.severe("Wrong airport coordinates latString = " + latString + ", longString = " + longString);
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
 
 		AirportServiceImpl service = new AirportServiceImpl();
-		AirportData ad=service.addAirport(iata, latitude, longitude);
-		
-		return Response.status(Response.Status.OK).entity("successfully added:"+ ad).build();
+		AirportData ad = service.addAirport(iataCode, latitude, longitude);
+
+		return Response.status(Response.Status.OK).entity("successfully added:" + ad).build();
 	}
 
 	@DELETE
 	@Path("/airport/{iata}")
 	@Override
-	public Response deleteAirport(@PathParam("iata") String iata) {
-		
+	public Response deleteAirport(@PathParam("iata") String iataCode) {
 		System.out.println("delete....");
+
+		if (iataCode == null || iataCode.length() != 3) {
+			LOGGER.severe("Bad parameters: iata = " + iataCode);
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
 		AirportServiceImpl service = new AirportServiceImpl();
-		service.deleteAirport(iata);
+		service.deleteAirport(iataCode);
 		return Response.status(Response.Status.OK).build();
 	}
 

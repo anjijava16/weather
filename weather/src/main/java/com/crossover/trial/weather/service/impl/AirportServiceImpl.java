@@ -173,14 +173,14 @@ public class AirportServiceImpl implements AirportService {
 
 	@Override
 	public AirportData addAirport(String iataCode, double latitude, double longitude) {
-		AirportData ad = new AirportData.Builder().withIata(iataCode).withLatitude(latitude)
+		AirportData airportData = new AirportData.Builder().withIata(iataCode).withLatitude(latitude)
 				.withLongitude(longitude).build();
 		//check already added
 		if(findAirportData(iataCode)==null){
-			AirportServiceImpl.airportData.add(ad);				
+			AirportServiceImpl.airportData.add(airportData);				
 			
 		}
-		return ad;
+		return airportData;
 
 	}
 
