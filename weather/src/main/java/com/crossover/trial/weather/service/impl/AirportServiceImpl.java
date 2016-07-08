@@ -66,19 +66,8 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
 			throws WeatherException {
-		//check AtmosphericInformation already added map
-		AtmosphericInformation ai = atmosphericInformationMap.get(iataCode);				
-		if(ai==null) {
-//			ai= new AtmosphericInformation();
-//			//key iataCode
-//			//value AtmosphericInformation
-//			atmosphericInformationMap.put(iataCode, ai);
-			return;
-		}
-		
+		AtmosphericInformation ai = atmosphericInformationMap.get(iataCode);		
 		updateAtmosphericInformation(ai, pointType, dp);
-		
-		//System.out.println("atmosphericInformationMap:"+atmosphericInformationMap);
 	}
 
 	/**
@@ -96,7 +85,9 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
 			DataPoint dp) throws WeatherException {
-
+		if(ai==null) {
+			throw new WeatherException();
+		}
 		DataPointType dptype = null;
 		try {
 			dptype = DataPointType.valueOf(pointType.toUpperCase());
