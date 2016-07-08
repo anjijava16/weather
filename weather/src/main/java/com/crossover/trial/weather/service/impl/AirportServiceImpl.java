@@ -244,12 +244,26 @@ public class AirportServiceImpl implements AirportService {
 
 	@Override
 	public double calculateDistance(AirportData ad1, AirportData ad2) {
-		double deltaLat = Math.toRadians(ad2.getLatitude() - ad1.getLatitude());
-		double deltaLon = Math.toRadians(ad2.getLongitude() - ad1.getLongitude());
-		double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltaLon / 2), 2)
-				* Math.cos(ad1.getLatitude()) * Math.cos(ad2.getLatitude());
-		double c = 2 * Math.asin(Math.sqrt(a));
-		return R * c;
+		double latPointOne= ad1.getLatitude();
+		double latPointTwo= ad2.getLatitude();
+		double longPointOne= ad1.getLongitude();
+		double longPointTwo=  ad2.getLongitude();
+		
+		double deltaLat = Math.toRadians(latPointTwo - latPointOne);
+		double deltaLon = Math.toRadians(longPointTwo - longPointOne);
+		
+	    double a = Math.pow(Math.sin(deltaLat / 2),2)
+	  	      + Math.cos(Math.toRadians(latPointOne)) * Math.cos(Math.toRadians(latPointTwo))
+	  	      * Math.pow(Math.sin(deltaLon / 2),2);
+
+	  	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	  	    return R * c;
+	//
+	//		Haversine
+	//		formula:	a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+	//		c = 2 ⋅ atan2( √a, √(1−a) )
+	//		d = R ⋅ c
+	// 		http://www.movable-type.co.uk/scripts/latlong.html
 	}
 
 //	/**
