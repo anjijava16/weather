@@ -27,24 +27,11 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQueryEndpointImpl");
     
-//    static {
-//        init();
-//    }
     /**
      * Retrieve service health including total size of valid data points and request frequency information.
      *
      * @return health stats for the service as a string
      */
-    
-
-	private int count(long lastUpdateTime, int datasize) {
-		if (lastUpdateTime > System.currentTimeMillis() - 86400000) {
-			return datasize + 1;
-		}
-		return datasize;
-
-	}
-
 	@Override
 	public String ping() {
 		Map<String, Object> retval = new HashMap<>();
@@ -113,6 +100,15 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 		retval.put("radius_freq", hist);
 
 		return gson.toJson(retval);
+	}
+	
+    
+	private int count(long lastUpdateTime, int datasize) {
+		if (lastUpdateTime > System.currentTimeMillis() - 86400000) {
+			return datasize + 1;
+		}
+		return datasize;
+
 	}
     
     public static void main(String[] args) {

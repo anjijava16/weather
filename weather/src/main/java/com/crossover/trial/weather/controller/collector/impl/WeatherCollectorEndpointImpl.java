@@ -31,9 +31,6 @@ import com.google.gson.Gson;
 public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 	public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class.getName());
 
-	/** shared gson json to object factory */
-	public final static Gson gson = new Gson();
-
 	@GET
 	@Path("/ping")
 	@Override
@@ -55,6 +52,7 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
 		AirportServiceImpl service = new AirportServiceImpl();
 
 		try {
+			final Gson gson = new Gson();
 			service.addDataPoint(iataCode, pointType, gson.fromJson(datapointJson, DataPoint.class));
 		} catch (WeatherException e) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
