@@ -5,9 +5,6 @@ package com.crossover.trial.weather.domain;
  * encapsulates sensor information for a particular location
  */
 public class AtmosphericInformation {
-
-	//key for AtmosphericInformation
-	private String iata;
 	
     /** temperature in degrees celsius */
     private DataPoint temperature;
@@ -77,23 +74,11 @@ public class AtmosphericInformation {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-	public String getIata() {
-		return iata;
-	}
-
-	public void setIata(String iata) {
-		this.iata = iata;
-	}
-
 	@Override
 	public String toString() {
-		return "AtmosphericInformation [iata=" + iata + ", temperature=" + temperature + ", wind="
-				+ wind + ", humidity=" + humidity + ", precipitation=" + precipitation
-				+ ", pressure=" + pressure + ", cloudCover=" + cloudCover + ", lastUpdateTime="
-				+ lastUpdateTime + "]";
-	}
-
-
-    
-    
+		return "AtmosphericInformation [temperature=" + temperature + ", wind=" + wind + ", humidity=" + humidity
+				+ ", precipitation=" + precipitation + ", pressure=" + pressure + ", cloudCover=" + cloudCover
+				+ ", lastUpdateTime=" + lastUpdateTime + "]";
+	}        
+      
 }

@@ -26,10 +26,6 @@ import static com.crossover.trial.weather.service.impl.AirportServiceImpl.*;
 public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
-
-    public static void init(){
-    	AirportServiceImpl service = new AirportServiceImpl();
-    }
     
 //    static {
 //        init();
@@ -44,9 +40,11 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
         Map<String, Object> retval = new HashMap<>();
 
         int datasize = 0;
-        for (String key  : atmosphericInformation.keySet()) {
+        for (String key  : atmosphericInformationMap.keySet()) {
         	
-        	AtmosphericInformation ai = atmosphericInformation.get(key);
+        	AtmosphericInformation ai = atmosphericInformationMap.get(key);
+        	
+        	System.out.println(atmosphericInformationMap);
             // we only count recent readings
             if (ai.getCloudCover() != null
                 || ai.getHumidity() != null
@@ -101,9 +99,6 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     
     public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
     	
-    	
-    	System.out.println("weather....iata...");
-    	
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
         
         AirportServiceImpl service = new AirportServiceImpl();
@@ -111,15 +106,19 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
         List<AtmosphericInformation> retval = new ArrayList<>();
         if (radius == 0) {                                  
-            retval.add(atmosphericInformation.get(iata));
+            retval.add(atmosphericInformationMap.get(iata));
         } else {
             AirportData ad = service.findAirportData(iata);
+            System.out.println("found : " + ad);
+            System.out.println("airport data : " + airportData);
             for (int i=0;i< airportData.size(); i++){
                 if (service.calculateDistance(ad, airportData.get(i)) <= radius){
-                    AtmosphericInformation ai = atmosphericInformation.get(iata);
-                    if ((ai!=null) && (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
-                       || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null)){
-                        retval.add(ai);
+                    AtmosphericInformation ai = atmosphericInformationMap.get(airportData.get(i).getIata());
+                    System.out.println("ai before : "+ ai);
+                    if (ai.getCloudCover() != null || ai.getHumidity() != null || ai.getPrecipitation() != null
+                            || ai.getPressure() != null || ai.getTemperature() != null || ai.getWind() != null){
+                             retval.add(ai);
+                        System.out.println("ai next : " + iata + " | " + ai);
                     }
                 }
             }

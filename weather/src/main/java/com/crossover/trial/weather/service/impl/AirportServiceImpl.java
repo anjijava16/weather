@@ -35,7 +35,7 @@ public class AirportServiceImpl implements AirportService {
 	 * atmospheric information for each airport, iataCode corresponds with
 	 * airportData
 	 */
-	public static Map<String, AtmosphericInformation> atmosphericInformation = new HashMap<>();
+	public static Map<String, AtmosphericInformation> atmosphericInformationMap = new HashMap<>();
 
 	/**
 	 * Internal performance counter to better understand most requested
@@ -66,19 +66,19 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void addDataPoint(String iataCode, String pointType, DataPoint dp)
 			throws WeatherException {
-
-		AtmosphericInformation ai = atmosphericInformation.get(iataCode);				
+		//check AtmosphericInformation already added map
+		AtmosphericInformation ai = atmosphericInformationMap.get(iataCode);				
 		if(ai==null) {
-			ai= new AtmosphericInformation();
-			ai.setIata(iataCode);
-			
-			atmosphericInformation.put(iataCode, ai);
+//			ai= new AtmosphericInformation();
+//			//key iataCode
+//			//value AtmosphericInformation
+//			atmosphericInformationMap.put(iataCode, ai);
+			return;
 		}
 		
 		updateAtmosphericInformation(ai, pointType, dp);
 		
-		System.out.println("airportdata : "+airportData);
-		System.out.println("atmosphericInformation:"+atmosphericInformation);
+		//System.out.println("atmosphericInformationMap:"+atmosphericInformationMap);
 	}
 
 	/**
@@ -177,8 +177,9 @@ public class AirportServiceImpl implements AirportService {
 				.withLongitude(longitude).build();
 		//check already added
 		if(findAirportData(iataCode)==null){
-			AirportServiceImpl.airportData.add(airportData);				
-			
+			AirportServiceImpl.airportData.add(airportData);			
+			AtmosphericInformation ai = new AtmosphericInformation();
+			atmosphericInformationMap.put(iataCode, ai);
 		}
 		return airportData;
 
@@ -226,7 +227,7 @@ public class AirportServiceImpl implements AirportService {
 		// getAirportDataStorage().remove(iataCode);
 
 		System.out.println("deleting....");
-		atmosphericInformation.remove(iataCode);
+		atmosphericInformationMap.remove(iataCode);
 		AirportData ad = findAirportData(iataCode);
 		airportData.remove(ad);
 	}
